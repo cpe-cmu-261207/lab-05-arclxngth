@@ -3,15 +3,6 @@ import CourseCard from "./components/CourseCard";
 import CourseForm from "./components/CourseForm";
 
 function App() {
-
-  function btn_sw(value){
-    if(value == 3)
-      value = 0.5
-    else
-      value += 0.5;
-  }
-
-
   // function calculateGPA() {
   //   let score = 0,
   //     sum_credit = 0;
