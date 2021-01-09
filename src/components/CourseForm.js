@@ -1,11 +1,11 @@
 import { GRADES } from "../utils/grades";
 import { CREDITS } from "../utils/credits";
-import { useContext, useState, useReducer } from "react";
-import { initialState, reducer } from "../utils/reducer.js"
+import { useContext, useReducer } from "react";
+import { initialState, reducer } from "../utils/reducer.js";
 
 class CourseList {
   constructor(id, name, credit, grade, grade_txt, semister) {
-    this.id = id;
+    this.course_id = id;
     this.name = name;
     this.credit = credit;
     this.grade = grade;
@@ -15,47 +15,106 @@ class CourseList {
 }
 
 const CourseForm = () => {
-  const [id, setID] = useState(0);
-  const [name, setName] = useState("");
-  const [credit, setCredit] = useState(0);
-  const [grade, setGrade] = useState(0);
-  const [semister, setSemister] = useState(0);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [courseList, setCourseList] = useState([]);
+  const initialCourseData = {
+    course_id: 0,
+    name: "",
+    credit: 1,
+    grade: -100,
+    grade_txt: "",
+    semister: 0,
+  };
+  const [courseData, dispatchCourse] = useReducer((prevState, action) => {
+    switch (action.type) {
+      case "setID":
+        return { ...prevState, course_id: action.value };
+      case "setName":
+        return { ...prevState, name: action.value };
+      case "setCredit":
+        return { ...prevState, credit: action.value };
+      case "setGrade": {
+        var grade_string = toStringGrade(action.value);
+        return { ...prevState, grade: action.value, grade_txt: grade_string };
+      }
+      case "setSemister":
+        return { ...prevState, semister: action.value };
+      case "increaseCredit": {
+        var tmp = (prevState.credit % 3) + 1;
+        return { ...prevState, credit: tmp };
+      }
+    }
+  }, initialCourseData);
 
-  const [state, dispatch] = useReducer(reducer, initialState)
-
-  function btn_sw(e) {
-    // className.replace("credit-1, credit-2")
-    // e.value = 2;
+  function btn_sw() {
+    return (
+      <input
+        type="button"
+        className={"credit-btn credit-" + courseData.credit}
+        value={ courseData.credit }
+        onClick={(e) => dispatchCourse({ type: "increaseCredit" })}
+      ></input>
+    );
   }
 
-  function addCourse(event){
-    event.preventDefault();
-
+  function toStringGrade(grade) {
     let grade_txt = "";
-      switch(grade){
-        case "4": grade_txt = "A"; break;
-        case "3.5": grade_txt = "B+"; break;
-        case "3": grade_txt = "B"; break;
-        case "2.5": grade_txt = "C+"; break;
-        case "2": grade_txt = "C"; break;
-        case "1.5": grade_txt = "D+"; break;
-        case "1": grade_txt = "D"; break;
-        case "0": grade_txt = "F"; break;
-        case "-1": grade_txt = "W"; break;
-      }
+    switch (grade) {
+      case "4":
+        grade_txt = "A";
+        break;
+      case "3.5":
+        grade_txt = "B+";
+        break;
+      case "3":
+        grade_txt = "B";
+        break;
+      case "2.5":
+        grade_txt = "C+";
+        break;
+      case "2":
+        grade_txt = "C";
+        break;
+      case "1.5":
+        grade_txt = "D+";
+        break;
+      case "1":
+        grade_txt = "D";
+        break;
+      case "0":
+        grade_txt = "F";
+        break;
+      case "-1":
+        grade_txt = "W";
+        break;
+      default:
+        grade_txt="";
+    }    
+    return grade_txt;
+  }
 
+  function addCourse(e) {
+    e.preventDefault();
 
-    var course = new CourseList(id, name, credit, grade, grade_txt, semister);
+    if (
+      courseData.course_id === 0 ||
+      courseData.name === "" ||
+      courseData.credit === 0 ||
+      courseData.grade_txt === "" ||
+      courseData.semister === 0
+    )
+      alert("Please input all data");
+    else {
+      var course = new CourseList(courseData.course_id, courseData.name, courseData.credit, courseData.grade, courseData.grade_txt, courseData.semister);
 
-    dispatch({
-      type: "addCourse",
-      payload: {
-        id: Date.now()
-        // name: course; 
-      }
-    })
+      dispatch({
+        type: "addCourse",
+        payload: {
+          id: Date.now(),
+          CourseList: course
+        },
+      });
+    }
   }
 
   return (
@@ -63,10 +122,22 @@ const CourseForm = () => {
       <form>
         <div>
           <div className="input-template">
-            <input className="input-form" placeholder="Course's ID" onChange={(e) => setID(e.target.value)}></input>
+            <input
+              className="input-form"
+              placeholder="Course's ID"
+              onChange={(e) =>
+                dispatchCourse({ type: "setID", value: e.target.value })
+              }
+            ></input>
           </div>
           <div className="input-template">
-            <input className="input-form" placeholder="Course's Name" onChange={(e) => setName(e.target.value)}></input>
+            <input
+              className="input-form"
+              placeholder="Course's Name"
+              onChange={(e) =>
+                dispatchCourse({ type: "setName", value: e.target.value })
+              }
+            ></input>
           </div>
           <div className="input-template3">
             <form>
@@ -76,7 +147,9 @@ const CourseForm = () => {
                 value="1"
                 name="semister"
                 className="checkbox"
-                onChange={setSemister(1)}
+                onChange={(e) =>
+                  dispatchCourse({ type: "setSemister", value: 1 })
+                }
               ></input>
               <label for="semister-1">SEMISTER 1</label>
               <input
@@ -85,23 +158,22 @@ const CourseForm = () => {
                 value="2"
                 name="semister"
                 className="checkbox"
-                onChange={setSemister(2)}
+                onChange={(e) =>
+                  dispatchCourse({ type: "setSemister", value: 2 })
+                }
               ></input>
               <label for="semister-2">SEMISTER 2</label>
             </form>
           </div>
           <div className="input-template2">
+            <div>{btn_sw()}</div>
             <div>
-              <input
-                type="button"
-                className="credit-btn credit-1"
-                value="1"
-                onClick={(e) => btn_sw(e.target.value)}
-                onChange={(e) => setCredit(e.target.value)}
-              ></input>
-            </div>
-            <div>
-              <select className="grade-btn" onChange={(e) => setGrade(e.target.value)}>
+              <select
+                className="grade-btn"
+                onChange={(e) =>
+                  dispatchCourse({ type: "setGrade", value: e.target.value })
+                }
+              >
                 <option value="-1" selected>
                   Select Grade...
                 </option>
@@ -118,7 +190,9 @@ const CourseForm = () => {
             </div>
           </div>
           <div className="input-template">
-            <button className="submit-btn" onClick={addCourse}>SUBMIT</button>
+            <button className="submit-btn" onClick={addCourse}>
+              SUBMIT
+            </button>
           </div>
         </div>
       </form>

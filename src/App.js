@@ -1,8 +1,26 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useEffect } from "react";
+import { initialState, reducer } from "./utils/reducer.js";
 import CourseCard from "./components/CourseCard";
 import CourseForm from "./components/CourseForm";
+import CourseList from "./components/CourseList"
+
 
 function App() {
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  function renderCourse(){
+    state.forEach((list) => {
+      <CourseCard 
+        course_id={list.course_id}
+        grade_txt={list.grade_txt}
+        credit={list.credit}
+        semister={list.semister}
+      />
+    })
+  }
+    
+
   // function calculateGPA() {
   //   let score = 0,
   //     sum_credit = 0;
@@ -19,7 +37,11 @@ function App() {
   //   if(sum_credit == 0) gpa = 0
 
   //   return gpa.toFixed(2);
-  // }
+  // } 
+
+  // useEffect(() => {
+  //   calculatGPA();
+  // }, [CourseList.length])
 
   return (
     <div>
@@ -27,6 +49,9 @@ function App() {
           <h1>GPA CALCULATOR</h1>
       </div>
       {/* TODO ADD UI */}
+      <div>
+        <p>DEBUG : {JSON.stringify()}</p>
+      </div>
       <div className="form">
         <label className="topic">
               COURSE LIST
@@ -35,7 +60,7 @@ function App() {
               COURSE FORM
         </label>
         <div className="courseCard-template">
-          <CourseCard/>
+          {renderCourse()}
         </div>
         <div className="courseForm-template">
           <CourseForm/>
