@@ -1,27 +1,14 @@
-import { useReducer } from "react";
+import { useReducer, useContext } from "react";
 import { initialState, reducer } from "../utils/reducer.js";
+import { AllContext } from "../App"
 
 const CourseCard = (props) => {
 
-  const [ state, dispatch ] = useReducer(reducer, initialState)
-
-  function deleteCourse (id){
-    dispatch({
-      type: "deleteCourse",
-      payload: id
-    })
-  }
-
-  function sem_set(){
-    
-  }
+  const onDeleteCourse = useContext(AllContext)
 
   return (
     <>
-    <div className="statementElement statementElement-1" onClick={() => props.deleteCourse(props.course_id)}>
-      {/* <aside className="statement-id">261207</aside>
-      <aside>GRADE: A</aside>
-      <aside>CREDIT: 3</aside> */}
+    <div className={"statementElement statementElement-" + props.semister} onClick={() => onDeleteCourse(props.course_id)}>
       <aside className="statement-id">{props.course_id}</aside>
       <aside>GRADE: {props.grade_txt}</aside>
       <aside>CREDIT: {props.credit}</aside>

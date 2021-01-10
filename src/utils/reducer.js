@@ -1,18 +1,16 @@
 export const initialState = {
-    courseList: [],
+    courseList: []
   };
   
 export function reducer(state, action) {
     switch (action.type) {
-      case "addCourse":
+      case "addCourse":{
         return {
-          ...state,
-          courseList: [...state.courseList, action.payload],
-        };
+          courseList: [...state.courseList, action.value]
+        };}
       case "deleteCourse":
         return {
-          ...state,
-          courseList: state.courseList.filter((list) => list.id !== action.payload),
+          courseList: state.courseList.filter((list) => list.course_id !== action.payload)
         };
       default:
         throw new Error();

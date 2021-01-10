@@ -8,6 +8,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  position: relative;
 }
 
 code {
@@ -68,6 +70,7 @@ code {
 
   width: 90%;
   max-height: 1000px;
+  min-height: 500px;
 
   background-color: rgb(255, 180, 95);
 
@@ -99,7 +102,7 @@ code {
 
   text-align: center;
 
-  margin: 30px;
+  margin-bottom: 30px;
 }
 
 .submit-btn{
@@ -255,4 +258,28 @@ code {
   border-radius: 20px;
 
   padding: 10px;
+}
+
+/* ------------- pop-up --------------- */
+
+.pop-upContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.2);
+
+  position: absolute;
+}
+
+.pop-up{
+  background-color: white;
+
+  padding: 16px;
+
+  font-size: 20px;
+  
 }

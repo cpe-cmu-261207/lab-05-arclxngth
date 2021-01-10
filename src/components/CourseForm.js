@@ -1,11 +1,10 @@
 import { GRADES } from "../utils/grades";
 import { CREDITS } from "../utils/credits";
 import { useContext, useReducer } from "react";
-import { initialState, reducer } from "../utils/reducer.js";
 
-class CourseList {
-  constructor(id, name, credit, grade, grade_txt, semister) {
-    this.course_id = id;
+export class CourseListData {
+  constructor(course_id, name, credit, grade, grade_txt, semister) {
+    this.course_id = course_id;
     this.name = name;
     this.credit = credit;
     this.grade = grade;
@@ -14,8 +13,7 @@ class CourseList {
   }
 }
 
-const CourseForm = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+const CourseForm = (props) => {
 
   const initialCourseData = {
     course_id: 0,
@@ -25,6 +23,7 @@ const CourseForm = () => {
     grade_txt: "",
     semister: 0,
   };
+
   const [courseData, dispatchCourse] = useReducer((prevState, action) => {
     switch (action.type) {
       case "setID":
@@ -58,39 +57,7 @@ const CourseForm = () => {
   }
 
   function toStringGrade(grade) {
-    let grade_txt = "";
-    switch (grade) {
-      case "4":
-        grade_txt = "A";
-        break;
-      case "3.5":
-        grade_txt = "B+";
-        break;
-      case "3":
-        grade_txt = "B";
-        break;
-      case "2.5":
-        grade_txt = "C+";
-        break;
-      case "2":
-        grade_txt = "C";
-        break;
-      case "1.5":
-        grade_txt = "D+";
-        break;
-      case "1":
-        grade_txt = "D";
-        break;
-      case "0":
-        grade_txt = "F";
-        break;
-      case "-1":
-        grade_txt = "W";
-        break;
-      default:
-        grade_txt="";
-    }    
-    return grade_txt;
+    return GRADES.find((g) => g.value == grade).name;
   }
 
   function addCourse(e) {
@@ -103,17 +70,14 @@ const CourseForm = () => {
       courseData.grade_txt === "" ||
       courseData.semister === 0
     )
-      alert("Please input all data");
+      props.setIsToggled("Please input all data")
+    else if(props.myCourse.some((g) => courseData.course_id == g.course_id))
+      props.setIsToggled("Duplicated data")
     else {
-      var course = new CourseList(courseData.course_id, courseData.name, courseData.credit, courseData.grade, courseData.grade_txt, courseData.semister);
+      var course = new CourseListData(courseData.course_id, 
+        courseData.name, courseData.credit, courseData.grade, courseData.grade_txt, courseData.semister);
 
-      dispatch({
-        type: "addCourse",
-        payload: {
-          id: Date.now(),
-          CourseList: course
-        },
-      });
+        props.setMyCourse([...props.myCourse, course])
     }
   }
 
