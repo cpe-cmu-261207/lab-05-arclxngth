@@ -22,7 +22,7 @@ function App() {
     let score = 0,
       sum_credit = 0;
     myCourse.forEach((value) => {
-      if (value.grade == "-1");
+      if (value.grade == "-2");
       else {
         score += value.grade * value.credit;
         sum_credit += value.credit;
@@ -69,6 +69,7 @@ function App() {
         </div>
         {/* TODO ADD UI */}
         <div>*** Click at Course Badge to Delete ***</div>
+        <div>*** Click at circle button to change credit ***</div>
         <div className="form">
           <label className="topic">COURSE LIST</label>
           <label className="topic">COURSE FORM</label>

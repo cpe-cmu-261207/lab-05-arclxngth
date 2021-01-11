@@ -33,6 +33,6 @@ export const GRADES = [
   },
   {
     name: "W",
-    value: null,
+    value: -2,
   },
 ];

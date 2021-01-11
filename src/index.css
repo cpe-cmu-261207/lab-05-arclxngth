@@ -39,7 +39,7 @@ code {
 
   background-color: white;
 
-  border-radius: 15%;
+  border-radius: 20px;
   border: 3px solid aquamarine;
 
   padding: 20px;
@@ -48,7 +48,6 @@ code {
 .grade-number{
   font-weight: bold;
   font-size: 60px;
-  
 }
 
 .grade-display{
@@ -239,11 +238,11 @@ code {
 }
 
 .credit-2{
-  background-color: rgb(117, 179, 114);
+  background-color: rgb(159, 253, 222);
 }
 
 .credit-3{
-  background-color: rgb(68, 105, 67);
+  background-color: rgb(163, 214, 255);
 }
 
 .grade-btn{
